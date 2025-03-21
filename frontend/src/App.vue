@@ -1,34 +1,30 @@
 <template>
-  <div>
-    <h1>Welcome to Vue with TypeScript</h1>
-    <p>Go Backend Response: {{ goMessage }}</p>
-  </div>
+  <nav>
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link>
+  </nav>
+  <router-view/>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import BackendService from "./services/BackendService"; // Import the service
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 
-export default defineComponent({
-  name: "App",
-  data() {
-    return {
-      goMessage: "Loading..." as string,
-    };
-  },
-  async mounted() {
-    try {
-      this.goMessage = await BackendService.getPing();
-    } catch (error) {
-      this.goMessage = "Error fetching from Go backend";
-      console.error(error);
+nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
     }
-  },
-});
-</script>
-
-<style scoped>
-h1 {
-  color: #42b983;
+  }
 }
 </style>

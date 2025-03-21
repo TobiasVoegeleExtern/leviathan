@@ -13,7 +13,7 @@ services:
     command: ["npm", "run", "serve"]
     depends_on:
       - backend_go
-      - backend_rust  # Added dependency on the Rust backend
+      # - backend_rust  # Added dependency on the Rust backend
 
   backend_go:
     build:
@@ -25,15 +25,15 @@ services:
     depends_on:
       - db
 
-  backend_rust:
-    build:
-      context: ./backend_rust
-    ports:
-      - "4000:4000"  # Exposing Rust GraphQL API
-    # environment:
-    #   - DATABASE_URL=postgres://user:password@db:5432/my_db
-    depends_on:
-      - db
+  # backend_rust:
+  #   build:
+  #     context: ./backend_rust
+  #   ports:
+  #     - "4000:4000"  # Exposing Rust GraphQL API
+  #   # environment:
+  #   #   - DATABASE_URL=postgres://user:password@db:5432/my_db
+  #   depends_on:
+  #     - db
 
   db:
     image: postgres:15
