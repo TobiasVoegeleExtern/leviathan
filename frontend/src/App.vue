@@ -1,7 +1,7 @@
 <template>
-  <Layout :menu-items="menuItems" app-name="Vue App">
+  <Layout :menu-items="menuItems" app-name="Leviathan">
     <template #header>
-      <h1>Welcome to Vue with TypeScript</h1>
+      <h1>Welcome </h1>
     
     </template>
 
@@ -34,7 +34,7 @@ const menuItems = ref<{ link: string; label: string }[]>([
 
 <style scoped>
 h1 {
-  color: #42b983;
+  color: #ffffff;
 }
 p {
   margin: 0.5rem 0;

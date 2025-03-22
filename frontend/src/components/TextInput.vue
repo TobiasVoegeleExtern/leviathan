@@ -4,7 +4,7 @@
     <label
       v-if="label"
       class="input-label"
-      :class="{ 'float-label': modelValue && modelValue !== '' }"
+      :class="{ 'float-label': modelValue && modelValue !== '', 'date-label': inputType === 'date' }"
     >
       {{ label }}
     </label>
@@ -46,11 +46,30 @@ watch(modelValue, (newVal) => {
   emit('update:modelValue', newVal);
 });
 
-// Handle input change for text, number, password, or date types (no formatting)
+// Handle input change for different types
 const handleInput = (event: Event) => {
   const input = event.target as HTMLInputElement;
-  // Simply update the modelValue based on the input value
-  modelValue.value = input.value;
+
+  // If inputType is 'number', allow only digits and decimal point
+  if (props.inputType === 'number') {
+    // Use a regular expression to allow only numbers and one decimal point
+    let inputValue = input.value;
+
+    // Remove any non-numeric characters except for a single decimal point
+    inputValue = inputValue.replace(/[^0-9.]/g, '');
+
+    // Ensure only one decimal point is allowed
+    const decimalCount = (inputValue.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      inputValue = inputValue.slice(0, inputValue.lastIndexOf('.'));
+    }
+
+    // Update modelValue with sanitized input
+    modelValue.value = inputValue;
+  } else {
+    // For other types, just update the model normally
+    modelValue.value = input.value;
+  }
 };
 </script>
 
@@ -80,6 +99,13 @@ const handleInput = (event: Event) => {
   left: 8px; /* Shift the label more to the left */
   font-size: 1rem; /* Smaller font size when the label floats */
   color: #6200ea; /* Optional: Change color to purple when label floats */
+}
+
+/* Special adjustment for date input fields */
+.input-label.date-label {
+  top: -30px; /* Move the label up higher for date inputs */
+  font-size: 0.875rem; /* Smaller font size */
+  color: #6200ea; /* Optional: Change color to purple for date input */
 }
 
 .input-field {
