@@ -70,9 +70,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import TextInput from '../components/TextInput.vue'; 
-import Button from '../components/Button.vue'; 
-import Dropdown from "../components/DropdownSelect.vue"; 
+import TextInput from '../components/material/TextInput.vue'; 
+import Button from '../components/material/Button.vue'; 
+import Dropdown from "../components/material/DropdownSelect.vue"; 
 
 interface Option {
   label: string;

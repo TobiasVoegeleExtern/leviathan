@@ -20,7 +20,9 @@
 
       <!-- Sidebar toggle button -->
       <button class="toggle-btn" @click="toggleSidebar">
-        {{ isSidebarCollapsed ? "▶" : "◀" }}
+        <span class="material-icons">
+          {{ isSidebarCollapsed ? "chevron_right" : "chevron_left" }}
+        </span>
       </button>
     </aside>
 
@@ -31,9 +33,11 @@
         <slot name="header"></slot>
 
         <!-- Dark Mode Toggle -->
-        <!-- <button class="toggle-mode-btn" @click="toggleTheme">
-          {{ theme === 'dark' ? 'Light Mode' : 'Dark Mode' }}
-        </button> -->
+        <button class="toggle-mode-btn" @click="toggleTheme">
+          <span class="material-icons">
+            {{ theme === "dark" ? "light_mode" : "dark_mode" }}
+          </span>
+        </button>
       </header>
 
       <!-- Main Content -->
@@ -46,71 +50,66 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import CustomLink from "../components/CustomLink.vue"; 
+import CustomLink from "./material/CustomLink.vue";
 
-// Define props with proper types
 defineProps<{
   menuItems: { link: string; label: string }[];
   appName: string;
 }>();
 
-// Reactive state for sidebar collapse
 const isSidebarCollapsed = ref(false);
+const theme = ref(localStorage.getItem("theme") || "light");
 
-// Toggle the sidebar collapse state
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
 };
 
-// Reactive state for theme (dark/light mode)
-const theme = ref(localStorage.getItem("theme") || "light");
-
-// Toggle theme between light and dark mode
 const toggleTheme = () => {
   theme.value = theme.value === "dark" ? "light" : "dark";
-  localStorage.setItem("theme", theme.value); // Store theme preference in localStorage
+  localStorage.setItem("theme", theme.value);
 };
 </script>
 
 <style scoped>
-/* Main layout container */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+/* Main layout */
 .layout {
   display: flex;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
-  font-family: "Roboto", sans-serif; /* Material font */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+  height: 100vh;
+  font-family: "Roboto", sans-serif;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Sidebar styles */
+/* Sidebar */
 .sidebar {
-  background: #263238; /* Dark grey-blue for material feel */
+  background: #37474f;
   color: white;
   padding: 1rem;
-  width: 250px;
+  width: 260px;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  border-radius: 8px; /* Rounded corners */
+  transition: width 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 0 8px 8px 0;
 }
 
 .sidebar.collapsed {
-  width: 60px;
-  overflow: hidden;
-  box-shadow: none; /* No shadow on collapsed */
+  width: 70px;
 }
 
 /* Sidebar Header */
 .sidebar-header {
   font-weight: bold;
-  padding-bottom: 1rem;
   font-size: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Menu Links */
+/* Menu */
 .menu {
   flex-grow: 1;
   overflow-y: auto;
@@ -124,55 +123,54 @@ const toggleTheme = () => {
 
 .menu li {
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, padding-left 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .menu li:hover {
-  background-color: #37474f; /* Darker grey-blue on hover */
-  padding-left: 1rem; /* Subtle left padding on hover */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .menu li.selected {
-  background-color: #0288d1; /* Material Blue for selected items */
+  background-color: #0288d1;
   color: white;
 }
 
 /* Sidebar toggle button */
 .toggle-btn {
-  background: #37474f;
+  background: none;
   border: none;
   color: white;
   cursor: pointer;
-  padding: 10px;
+  padding: 12px;
   margin-top: auto;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
+  align-self: center;
+  transition: background 0.3s ease;
 }
 
 .toggle-btn:hover {
-  background-color: #0288d1; /* Hover effect on button */
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Main container styles */
+/* Main container */
 .main-container {
-  display: flex;
-  flex-direction: column;
   flex-grow: 1;
+  background-color: #eceff1;
+  border-radius: 8px;
+  margin-left: 15px;
   overflow: hidden;
-  background-color: #eceff1; /* Light grey background for main content */
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Slight inner shadow */
-  border-radius: 8px; /* Rounded corners */
-  margin-left: 15px; /* Space between sidebar and main content */
 }
 
-/* Header styles */
+/* Header */
 .header {
-  background: #0288d1; /* Material Blue */
+  background: #0288d1;
   color: white;
   padding: 1rem;
   display: flex;
@@ -180,12 +178,25 @@ const toggleTheme = () => {
   justify-content: space-between;
   font-size: 1.2rem;
   font-weight: bold;
-  border-top-left-radius: 0; /* No rounded top left corner */
-  border-bottom-left-radius: 0; /* No rounded bottom left corner */
-  border-radius: 8px 8px 0 0; /* Only top right and bottom right corners are rounded */
+  border-radius: 8px 8px 0 0;
 }
 
-/* Dark Mode Styles */
+/* Toggle Mode Button */
+.toggle-mode-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.toggle-mode-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Dark Mode */
 .layout.dark {
   background-color: #121212;
   color: white;
@@ -193,7 +204,6 @@ const toggleTheme = () => {
 
 .layout.dark .sidebar {
   background-color: #333;
-  color: white;
 }
 
 .layout.dark .main-container {
@@ -205,11 +215,7 @@ const toggleTheme = () => {
 }
 
 .layout.dark .menu li:hover {
-  background-color: #444; /* Darker grey-blue on hover in dark mode */
-}
-
-.layout.dark .toggle-mode-btn {
-  background-color: #0288d1; /* Hover effect on dark mode button */
+  background-color: #444;
 }
 
 .layout.dark .toggle-btn {
@@ -217,55 +223,6 @@ const toggleTheme = () => {
 }
 
 .layout.dark .menu li.selected {
-  background-color: #0288d1; /* Selected item color in dark mode */
-  color: white;
-}
-
-/* Light Mode Styles */
-.layout.light {
-  background-color: #eceff1;
-  color: #333;
-}
-
-.layout.light .sidebar {
-  background-color: #263238;
-  color: white;
-}
-
-.layout.light .main-container {
-  background-color: #ffffff;
-}
-
-.layout.light .header {
-  background-color: #0288d1;
-}
-
-.layout.light .toggle-mode-btn {
-  background-color: #0288d1; /* Hover effect on light mode button */
-}
-
-.layout.light .toggle-btn {
-  background-color: #37474f;
-}
-
-.layout.light .menu li.selected {
-  background-color: #0288d1; /* Selected item color in light mode */
-  color: white;
-}
-
-/* Toggle button styles for dark and light mode */
-.toggle-mode-btn {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 8px 16px;
-  font-size: 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-mode-btn:hover {
   background-color: #0288d1;
 }
 </style>

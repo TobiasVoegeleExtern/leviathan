@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/HomeView.vue';
+import HomeView from '../views/HomeView.vue';
 import Haushalt  from '../views/Haushalt.vue';
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: HomeView },
   { path: '/haushalt', component: Haushalt },
 ];
 

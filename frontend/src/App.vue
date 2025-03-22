@@ -16,13 +16,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
-import Layout from '../src/components/AppLayout.vue';
+import Layout from './components/AppLayout.vue';
 
 // Menu items for the layout
 const menuItems = ref<{ link: string; label: string }[]>([
-  { link: '/home', label: 'Home' },
-  { link: '/haushalt', label: 'Haushalt' },
-  { link: '/contact', label: 'Contact' },
+  { link: '/', label: 'Home' },
+  { link: '/haushalt', label: 'Haushaltsbuch' },
 ]);
 </script>
 
