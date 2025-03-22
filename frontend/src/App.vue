@@ -18,12 +18,6 @@ import { ref, onMounted } from 'vue';
 
 import Layout from '../src/components/AppLayout.vue';
 
-
-const goMessage = ref<string>('Loading...');
-
-
-
-
 // Menu items for the layout
 const menuItems = ref<{ link: string; label: string }[]>([
   { link: '/home', label: 'Home' },

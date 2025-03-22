@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Form from "../complexcomponents/Form.vue";
+import Form from "../complexcomponents/AusgabenForm.vue";
 import Button from "../components/Button.vue"; 
 
 const showForm = ref(false);
