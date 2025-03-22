@@ -5,13 +5,20 @@
       label="Ausgabe hinzufügen"
       :execute="toggleFormVisibility"
     />
-    <p></p>
+    <hr>
+    <h2>Data Table</h2>
     <div v-if="!showForm">
     <DataTable :columns="columns" :data="rows" />
-  </div>
-    <!-- Conditionally render the form -->
-    <Form v-if="showForm" />
+    <h2>Data Table pixel style</h2>
+    <PixelTable :columns="columns" :data="rows" />
 
+    
+  </div>
+
+    <Form v-if="showForm" />
+    <hr>
+    <h2>Modals</h2>
+ 
     <button @click="openBasicDialog" class="open-btn">Open Basic Dialog</button>
     <button @click="openFullscreenDialog" class="open-btn">Open Fullscreen Dialog</button>
 
@@ -24,6 +31,12 @@
     <Dialog ref="fullscreenDialog" title="Edit Details" fullscreen>
       <p>This is a full-screen modal for editing details.</p>
     </Dialog>
+
+    <hr>
+    <h2>Checkbox</h2>
+    <CheckBox></CheckBox>
+    <hr>
+    <RadioButton></RadioButton>
   </div>
 </template>
 
@@ -33,6 +46,9 @@ import Form from "../complexcomponents/AusgabenForm.vue";
 import Button from "../components/material/Button.vue"; 
 import DataTable from "../components/material/DataTable.vue";
 import Dialog from '../components/material/Modal.vue'
+import PixelTable from "../components/pixel/PixelTable.vue";
+import CheckBox from "../components/material/CheckBox.vue";
+import RadioButton from "../components/material/RadioButton.vue";
 const showForm = ref(false);
 
 

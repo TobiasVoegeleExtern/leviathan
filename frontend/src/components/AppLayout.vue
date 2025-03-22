@@ -69,16 +69,16 @@ const toggleTheme = () => {
   localStorage.setItem("theme", theme.value);
 };
 </script>
-
 <style scoped>
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-/* Main layout */
+/* Main Layout */
 .layout {
   display: flex;
   height: 100vh;
   font-family: "Roboto", sans-serif;
   transition: background-color 0.3s, color 0.3s;
+  overflow: hidden;
 }
 
 /* Sidebar */
@@ -86,11 +86,11 @@ const toggleTheme = () => {
   background: #37474f;
   color: white;
   padding: 1rem;
-  width: 260px;
+  width: 250px;  /* Adjusted width for better fit */
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease, background-color 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
   border-radius: 0 8px 8px 0;
 }
 
@@ -101,12 +101,13 @@ const toggleTheme = () => {
 /* Sidebar Header */
 .sidebar-header {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1.5rem;  /* Added margin for spacing */
 }
 
 /* Menu */
@@ -123,12 +124,12 @@ const toggleTheme = () => {
 
 .menu li {
   margin-bottom: 1rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: background-color 0.3s ease;
+  gap: 12px;
+  transition: background-color 0.3s ease, padding-left 0.2s ease;
 }
 
 .menu li:hover {
@@ -166,19 +167,25 @@ const toggleTheme = () => {
   border-radius: 8px;
   margin-left: 15px;
   overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
 /* Header */
 .header {
   background: #0288d1;
   color: white;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 1.2rem;
   font-weight: bold;
   border-radius: 8px 8px 0 0;
+  transition: background-color 0.3s ease;
+
+  position: sticky;  /* Makes the header sticky */
+  top: 0;  /* Sticks the header to the top */
+  z-index: 1000;  
 }
 
 /* Toggle Mode Button */
@@ -196,7 +203,7 @@ const toggleTheme = () => {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Dark Mode */
+/* Dark Mode Styles */
 .layout.dark {
   background-color: #121212;
   color: white;
@@ -225,4 +232,14 @@ const toggleTheme = () => {
 .layout.dark .menu li.selected {
   background-color: #0288d1;
 }
+
+/* Ensure proper scroll handling */
+.layout .main-container, .menu {
+  overflow-y: auto;  /* Ensures scroll works in both main content and sidebar */
+}
+
+.layout.dark .menu li:hover {
+  background-color: #444;
+}
+
 </style>
