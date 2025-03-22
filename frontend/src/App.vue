@@ -1,30 +1,42 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <Layout :menu-items="menuItems" app-name="Vue App">
+    <template #header>
+      <h1>Welcome to Vue with TypeScript</h1>
+    
+    </template>
+
+    <template #default>
+      <div>
+        <p>Neuer Test</p>
+      </div>
+    </template>
+  </Layout>
 </template>
 
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+import Layout from '../src/components/AppLayout.vue';
+
+
+const goMessage = ref<string>('Loading...');
+
+
+
+
+// Menu items for the layout
+const menuItems = ref<{ link: string; label: string }[]>([
+  { link: '/home', label: 'Home' },
+  { link: '/haushalt', label: 'Haushalt' },
+  { link: '/contact', label: 'Contact' },
+]);
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+h1 {
+  color: #42b983;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+p {
+  margin: 0.5rem 0;
 }
 </style>
