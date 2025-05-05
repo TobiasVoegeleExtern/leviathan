@@ -1,21 +1,5 @@
 services:
-  # Omniverse Frontend Service (auskommentiert)
-  # omniverse:
-  #   build:
-  #     context: ./omniverse
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - "./omniverse:/app"
-  #     - /app/node_modules
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-  #     - VITE_HOST=0.0.0.0
-  #   command: ["npm", "run", "dev"]
-  #   depends_on:
-  #     - backend_go
 
-  # Main Frontend Service (z.B. Angular/Vue/React)
   frontend:
     build:
       context: "./frontend" # Pfad zum Build-Kontext
