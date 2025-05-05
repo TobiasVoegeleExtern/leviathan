@@ -1,0 +1,24 @@
+# Go Backend
+
+This is the backend of the project built using the Go programming language. It leverages several third-party libraries to provide robust and scalable functionality for the system. This README file provides an overview of how to set up the project, the required dependencies, and their respective usage.
+
+## Requirements
+
+- Go 1.24.0 or higher
+- PostgreSQL for database management
+
+## Setup
+
+To get started with the backend Go project, follow these steps:
+
+### 1. Install Go and Dependencies
+
+Make sure you have Go 1.24.0 or higher installed. You can verify this by running the following command:
+
+```bash
+go version
+
+Install Dependencies 
+
+```bash
+go mod tidy

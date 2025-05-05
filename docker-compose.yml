@@ -1,0 +1,123 @@
+services:
+  # Omniverse Frontend Service (auskommentiert)
+  # omniverse:
+  #   build:
+  #     context: ./omniverse
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - "./omniverse:/app"
+  #     - /app/node_modules
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - VITE_HOST=0.0.0.0
+  #   command: ["npm", "run", "dev"]
+  #   depends_on:
+  #     - backend_go
+
+  # Main Frontend Service (z.B. Angular/Vue/React)
+  frontend:
+    build:
+      context: "./frontend" # Pfad zum Build-Kontext
+    ports:
+      - "4200:4200"        # Host-Port : Container-Port
+    volumes:
+      - "./frontend:/app"  # Mountet lokalen Ordner in den Container
+      - /app/node_modules  # Anonymes Volume für node_modules (Performance)
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Für Hot-Reloading in Docker-Volumes
+      - VITE_HOST=0.0.0.0        # Macht Vite von außen erreichbar
+    command: ["npm", "run", "dev"] # Startet den Dev-Server
+    # Hängt jetzt von beiden Backends ab (optional, je nachdem was das Frontend braucht)
+    depends_on:
+      - backend_go
+      # - backend_py # Einkommentieren, wenn das Frontend auch direkt vom Python-Backend abhängt
+
+  # Svelte "Recipebook" Frontend Service
+  recipebook:
+    build:
+      context: "./recipebook" # Pfad zum Build-Kontext
+    ports:
+      - "5173:5173"        # Host-Port : Container-Port (Standard Vite)
+    volumes:
+      - "./recipebook:/app"  # Mountet lokalen Ordner
+      - /app/node_modules    # Anonymes Volume
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_HOST=0.0.0.0
+    # Stellt sicher, dass Vite auf allen Interfaces lauscht
+    command: ["npm", "run", "dev", "--", "--host"]
+    # Hängt jetzt von beiden Backends ab (optional)
+    depends_on:
+      - backend_go
+      # - backend_py # Einkommentieren, wenn Recipebook auch direkt vom Python-Backend abhängt
+
+  # Go Backend Service
+  backend_go:
+    build:
+      context: "./backend_go" # Pfad zum Build-Kontext
+    ports:
+      - "8000:8000"        # Host-Port : Container-Port
+    environment:
+      # Verbindungsstring zur DB; 'db' ist der Service-Name des DB-Containers
+      # Bleibt hier, wenn der Go-Backend Postgres nutzt
+      - DATABASE_URL=postgres://user:password@db:5432/my_db?sslmode=disable
+    depends_on:
+      - db                 # Startet erst, wenn db gestartet ist
+
+  # Postgres DB Service
+  db:
+    image: "postgres:15"     # Verwendet das offizielle Postgres 15 Image
+    environment:             # Umgebungsvariablen zum Konfigurieren der DB
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=my_db
+    ports:
+      - "5432:5432"        # Erlaubt Zugriff auf die DB vom Host-System
+    volumes:
+      # Bindet das benannte Volume an das Datenverzeichnis von Postgres
+      - "postgres_data:/var/lib/postgresql/data"
+      # Alternative (weniger empfohlen für DBs): Lokalen Ordner mounten
+      # - "./postgresvolume:/var/lib/postgresql/data" # -> Kommentar oder entfernen, wenn Volume genutzt wird
+
+  # Python Backend Service (korrekt eingerückt)
+  backend_py:
+    build:
+      context: "./backend_py" # Pfad zum Python Backend Verzeichnis
+    ports:
+      # WICHTIG: Anderen Host-Port verwenden, da 8000 schon von backend_go belegt ist!
+      - "8001:8000"        # Host-Port 8001 -> Container-Port 8000
+    volumes:
+      - ./backend_py:/app  # Mountet lokalen Code in den Container
+    environment:
+      # Verbindung zur EXTERENEN MongoDB auf sphere.local
+      - MONGODB_URI=mongodb://admin:admin@sphere.local:27017
+      - MONGODB_DATABASE=recipes # Dein Datenbankname
+    # Keine interne Docker-Abhängigkeit, da MongoDB extern ist
+    # depends_on: NICHT NOTWENDIG HIER
+    # Startet den Python Server im Container auf Port 8000
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+  
+  backend_gql:
+    build:
+      context: "./backend_gql" # Pfad zum neuen Go GraphQL Backend
+    ports:
+      # Anderen Host-Port verwenden, um Konflikt mit backend_go zu vermeiden
+      - "8081:8080"        # Host-Port 8081 -> Container-Port 8080
+    volumes:
+      # Mountet lokalen Code für Entwicklung (Hot-Reload nicht Standard bei Go-Builds)
+      - ./backend_gql:/app # Annahme: WORKDIR /app im Dockerfile
+    environment:
+      # Verbindung zur EXTERENEN MongoDB auf sphere.local
+      - MONGODB_URI=mongodb://admin:admin@sphere.local:27017
+      - MONGODB_DATABASE=recipes # Dein Datenbankname
+      # Env Vars für Collection-Namen (von graphql/schema.go benötigt)
+      - MONGODB_COLLECTION_USERS=users     # Beispielname, anpassen!
+      - MONGODB_COLLECTION_RECIPES=recipes # Beispielname, anpassen!
+      - GIN_MODE=debug # oder release
+    # Keine interne Docker-Abhängigkeit, da MongoDB extern ist
+    # command: wird im Dockerfile gesetzt (Starten der kompilierten Binary)
+
+# Definition des benannten Volumes für Datenpersistenz
+volumes:
+  postgres_data: {} # Lässt Docker das Volume verwalten
